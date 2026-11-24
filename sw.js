@@ -1,5 +1,5 @@
 /* WAQTY — Service Worker: aplikasi tetap terbuka saat offline & dimuat instan */
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 const CACHE = 'waqty-' + VERSION;
 const CORE = [
   './', 'index.html', 'manifest.webmanifest', 'assets/img/logo.svg',

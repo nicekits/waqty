@@ -35,4 +35,5 @@ wr('apps-script/Index.html', gas);
 wr('apps-script/Styles.html', '<style>\n' + rd('assets/css/style.css') + '</style>\n');
 wr('apps-script/Data.html', '<script>\n' + rd('assets/js/data.js') + '</script>\n');
 wr('apps-script/App.html', '<script>\n' + rd('assets/js/app.js') + '</script>\n');
+wr('apps-script/Qris.html', 'data:image/png;base64,' + fs.readFileSync(path.join(root, 'assets/img/qris.png')).toString('base64') + '\n');
 wr('sw.js', rd('sw.js').replace(/const VERSION = '[^']*'/, "const VERSION = '" + V + "'"));

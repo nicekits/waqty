@@ -80,6 +80,8 @@ const ICONS = {
   calc: '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>',
   shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
   home: '<path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+  heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+  chat: '<path d="M21 11.5a8.4 8.4 0 0 1-12.6 7.3L3 21l2.2-5.4A8.4 8.4 0 1 1 21 11.5z"/>',
   volume: '<path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/>'
 };
 function ic(name, cls) { return '<svg class="i ' + (cls || '') + '" viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[name] || '') + '</svg>'; }
@@ -392,6 +394,7 @@ function applySettings() {
   const act = $('.tab.active');
   if (firstVisible && (!act || act.classList.contains('hidden'))) showTab(firstVisible);
   $('#quoteCard').classList.toggle('hidden', sec.quote === false);
+  applyDonation();
   $('#eventsCard').classList.toggle('hidden', sec.events === false);
   $('#agendaCard').classList.toggle('hidden', sec.agenda === false);
 }
@@ -910,6 +913,52 @@ function closeKiosk() {
   try { if (document.fullscreenElement) document.exitFullscreen(); else if (document.webkitFullscreenElement) document.webkitExitFullscreen(); } catch (e) {}
 }
 
+/* ---------------- donasi (QRIS) ---------------- */
+function applyDonation() {
+  const d = ST.donation || {}, on = d.enabled !== false;
+  const hideUntil = +LS.get('donStripHide', 0) || 0;
+  $('#btnDonate').classList.toggle('hidden', !on || d.header === false);
+  $('#btnDonate span').textContent = d.label || 'Donasi';
+  $('#donateCard').classList.toggle('hidden', !on || d.card === false);
+  $('#dcTitle').textContent = d.cardTitle || 'Dukung WAQTY';
+  $('#dcText').textContent = d.cardText || '';
+  $('#donStrip').classList.toggle('hidden', !on || d.banner === false || hideUntil > Date.now());
+  $('#dsTitle').textContent = d.bannerText || 'Bantu WAQTY tetap gratis & tanpa iklan';
+  $('#footDon').classList.toggle('hidden', !on);
+}
+function loadQris() {
+  const img = $('#dnImg'), load = $('#dnLoad'), want = (ST.donation || {}).qrisUrl || '';
+  const key = want || 'default';
+  if (img.dataset.key === key && img.classList.contains('ok')) return;
+  img.classList.remove('ok'); load.classList.remove('hidden'); load.textContent = 'Memuat QRIS…';
+  const set = src => {
+    img.onload = () => { img.classList.add('ok'); load.classList.add('hidden'); };
+    img.onerror = () => { load.textContent = 'QRIS gagal dimuat. Periksa koneksi internet lalu buka kembali.'; };
+    img.dataset.key = key; img.src = src; $('#dnSave').href = src;
+  };
+  if (want) set(want);
+  else if (MODE === 'gas') rpc('getQris').then(set).catch(e => { load.textContent = e.message || 'QRIS gagal dimuat.'; });
+  else set('assets/img/qris.png');
+}
+function openDonate() {
+  const d = ST.donation || {};
+  $('#dnTitle').textContent = d.title || 'Donasi';
+  $('#dnMsg').textContent = d.message || ''; $('#dnMsg').classList.remove('open'); $('#dnMore').textContent = 'Baca selengkapnya';
+  $('#dnMerchant').textContent = d.merchant ? 'Penerima: ' + d.merchant : '';
+  $('#dnThanksText').textContent = d.thanks || '';
+  let wa = String(d.whatsapp || '').replace(/\D/g, ''); if (wa.charAt(0) === '0') wa = '62' + wa.slice(1);
+  const waEl = $('#dnWa'); waEl.classList.toggle('hidden', !wa);
+  if (wa) waEl.href = 'https://wa.me/' + wa + '?text=' + encodeURIComponent("Assalamu'alaikum, saya baru saja berdonasi untuk " + (ST.appName || 'WAQTY') + ' melalui QRIS. Semoga bermanfaat dan berkah.');
+  $('#dnMain').classList.remove('hidden'); $('#dnThanks').classList.add('hidden');
+  loadQris(); openModal('mDonate');
+  $('#mDonate .mcard').scrollTop = 0;
+}
+function donationDone() {
+  LS.set('donatedAt', Date.now()); LS.set('donStripHide', Date.now() + 30 * 864e5);
+  $('#dnMain').classList.add('hidden'); $('#dnThanks').classList.remove('hidden');
+  $('#mDonate .mcard').scrollTop = 0; applyDonation();
+}
+
 /* ---------------- tab ---------------- */
 /* Tab dirender hanya saat dibuka (lebih ringan saat halaman dimuat) */
 const LAZY = { calendar: () => renderCalendar(), holidays: () => renderHolidays(), qibla: () => renderQibla() };
@@ -939,7 +988,7 @@ const ADM = { token: null, draft: null, defaults: null, sec: 'umum', dirty: fals
 const ASEC = [
   ['umum', 'home', 'Umum'], ['lokasi', 'pin', 'Lokasi Default'], ['hitung', 'calc', 'Perhitungan'], ['tampilan', 'palette', 'Tampilan'],
   ['bagian', 'layout', 'Bagian Halaman'], ['mutiara', 'quote', 'Mutiara'], ['peristiwa', 'history', 'Hari Besar & Peristiwa'],
-  ['pengingat', 'bell', 'Pengingat'], ['keamanan', 'shield', 'Keamanan & Data']
+  ['pengingat', 'bell', 'Pengingat'], ['donasi', 'heart', 'Donasi'], ['keamanan', 'shield', 'Keamanan & Data']
 ];
 const getP = (o, p) => p.split('.').reduce((a, k) => a == null ? a : a[k], o);
 const setP = (o, p, v) => { const ks = p.split('.'); let a = o; ks.slice(0, -1).forEach(k => { if (a[k] == null || typeof a[k] !== 'object') a[k] = {}; a = a[k]; }); a[ks[ks.length - 1]] = v; };
@@ -1028,6 +1077,23 @@ function renderAdminSec() {
         LF('customReminders', i, 'msg', 'Pesan', 'text', r.msg) +
         '<div class="field"><label>Hari (kosong = setiap hari)</label><div class="days">' + D.DAYS.map((n, k) => '<label><input type="checkbox" data-days="' + i + '" value="' + k + '"' + ((r.days || []).map(Number).indexOf(k) > -1 ? ' checked' : '') + '>' + n + '</label>').join('') + '</div></div>',
         { label: '', time: '19:30', msg: '', days: [] }, 'Tambah pengingat');
+  } else if (s === 'donasi') {
+    h = '<h4>Donasi (QRIS)</h4><p class="lead">Tombol donasi tampil di header (desktop), banner kecil di bawah jadwal (HP), kartu di samping, dan tautan di footer.</p>' +
+      F('donation.enabled', 'Aktifkan fitur donasi', 'toggle') +
+      F('donation.header', 'Tombol di header (desktop/tablet)', 'toggle') +
+      F('donation.banner', 'Banner ajakan di bawah jadwal (HP)', 'toggle', { help: 'Pengunjung bisa menyembunyikannya 7 hari; otomatis tersembunyi 30 hari setelah berdonasi.' }) +
+      F('donation.card', 'Kartu “Dukung WAQTY” di samping', 'toggle') +
+      '<div class="sec-title">Teks</div>' +
+      '<div class="row">' + F('donation.label', 'Label tombol header', 'text') + F('donation.bannerText', 'Teks banner (HP)', 'text') + '</div>' +
+      F('donation.title', 'Judul jendela donasi', 'text') +
+      F('donation.message', 'Pesan ajakan di jendela donasi', 'textarea') +
+      '<div class="row">' + F('donation.cardTitle', 'Judul kartu', 'text') + F('donation.merchant', 'Nama penerima', 'text') + '</div>' +
+      F('donation.cardText', 'Teks kartu', 'textarea') +
+      F('donation.thanks', 'Ucapan terima kasih', 'textarea') +
+      '<div class="sec-title">Pembayaran</div>' +
+      F('donation.qrisUrl', 'URL gambar QRIS lain (opsional)', 'url', { ph: 'https://…/qris.png', help: 'Kosongkan untuk memakai QRIS BeeCOMP bawaan.' }) +
+      F('donation.whatsapp', 'Nomor WhatsApp konfirmasi (opsional)', 'text', { ph: '08xxxxxxxxxx', help: 'Bila diisi, muncul tombol “Konfirmasi via WhatsApp”.' }) +
+      '<button class="btn sm" id="aDonPrev">' + ic('heart') + 'Pratinjau jendela donasi</button>';
   } else if (s === 'keamanan') {
     h = '<h4>Keamanan & Data</h4><p class="lead">Ganti password, cadangkan, atau pulihkan pengaturan.</p>' +
       '<div class="sec-title">Ganti password admin</div>' +
@@ -1087,6 +1153,7 @@ function bindAdminSec() {
     markDirty(); renderAdminSec();
   });
   const u = $('#aUseLoc'); if (u) u.onclick = () => { ADM.draft.defaultLocation = { name: LOC.name, region: LOC.region || '', country: LOC.country || 'Indonesia', lat: LOC.lat, lng: LOC.lng, tz: LOC.tz, elev: LOC.elev || 0 }; markDirty(); renderAdminSec(); };
+  const dp = $('#aDonPrev'); if (dp) dp.onclick = () => { const keep = ST; ST = Object.assign({}, ST, { donation: ADM.draft.donation }); openDonate(); ST = keep; };
   const rc = $('#aResetColor'); if (rc) rc.onclick = () => { Object.assign(ADM.draft.theme, { primary: '#04777F', accent: '#FE5A1A', gold: '#C9A050' }); markDirty(); renderAdminSec(); };
   if ($('#aPrev')) adminPreview();
   const ex = $('#exJson'); if (ex) ex.value = JSON.stringify(ADM.draft, null, 2);
@@ -1188,6 +1255,15 @@ function bindUI() {
   $('#cNext').onclick = () => { CV.m++; if (CV.m > 12) { CV.m = 1; CV.y++; } renderCalendar(); };
   $('#cToday').onclick = () => { CV.y = TODAY.p.y; CV.m = TODAY.p.m; renderCalendar(); };
   $('#calGrid').addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (b) openDay(b.dataset.d); });
+  // donasi
+  ['#btnDonate', '#dcBtn', '#footDon'].forEach(s => $(s).addEventListener('click', openDonate));
+  $('#donStrip').addEventListener('click', e => {
+    if (e.target.closest('#donStripX')) { LS.set('donStripHide', Date.now() + 7 * 864e5); $('#donStrip').classList.add('hidden'); return; }
+    openDonate();
+  });
+  $('#dnDone').addEventListener('click', donationDone);
+  const toggleMsg = () => { const m = $('#dnMsg'), o = m.classList.toggle('open'); $('#dnMore').textContent = o ? 'Ringkas' : 'Baca selengkapnya'; };
+  $('#dnMsg').addEventListener('click', toggleMsg); $('#dnMore').addEventListener('click', toggleMsg);
   // kiblat & mutiara
   $('#qSensor').onclick = enableSensor;
   $('#qNext').onclick = () => renderQuote(true);

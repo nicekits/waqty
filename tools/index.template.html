@@ -38,6 +38,7 @@
         <span class="brand-text"><b id="appName">WAQTY</b><small id="tagline"></small></span>
       </button>
       <div class="actions">
+        <button class="btn-donate" id="btnDonate" title="Dukung WAQTY lewat donasi"><i data-ic="heart"></i><span>Donasi</span></button>
         <button class="icon-btn" id="btnRemind" title="Pengingat"><i data-ic="bell"></i></button>
         <button class="icon-btn" id="btnFull" title="Layar penuh"><i data-ic="expand"></i></button>
         <button class="icon-btn" id="btnRefresh" title="Muat ulang data"><i data-ic="refresh"></i></button>
@@ -113,6 +114,14 @@
 
     <!-- ===== JADWAL HARI INI ===== -->
     <section class="times" id="times"></section>
+
+    <!-- ===== AJAKAN DONASI (HP) ===== -->
+    <button class="donate-strip" id="donStrip">
+      <span class="ds-ic"><i data-ic="heart"></i></span>
+      <span class="ds-tx"><b id="dsTitle">Bantu WAQTY tetap gratis &amp; tanpa iklan</b><small>Donasi seikhlasnya via QRIS · semua bank &amp; e-wallet</small></span>
+      <span class="ds-go">Donasi</span>
+      <span class="ds-x" id="donStripX" role="button" aria-label="Sembunyikan">×</span>
+    </button>
 
     <!-- ===== KONTEN ===== -->
     <div class="layout">
@@ -203,6 +212,15 @@
           </div>
         </article>
 
+        <article class="card donate-card" id="donateCard">
+          <svg class="dc-art" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          <div class="card-h"><h3><i data-ic="heart" class="star" style="color:var(--accent)"></i><span id="dcTitle">Dukung WAQTY</span></h3><span class="chip accent">QRIS</span></div>
+          <p class="dc-text" id="dcText"></p>
+          <div class="dc-hadith"><span class="ar">مَا نَقَصَتْ صَدَقَةٌ مِنْ مَالٍ</span><small>“Sedekah tidak akan mengurangi harta.” — HR Muslim</small></div>
+          <button class="btn accent dc-btn" id="dcBtn"><i data-ic="heart"></i>Donasi via QRIS</button>
+          <small class="dc-foot">Nominal seikhlasnya · semua bank &amp; e-wallet</small>
+        </article>
+
         <article class="card" id="eventsCard">
           <div class="card-h"><h3><i data-ic="history" class="star"></i>Peristiwa Hari Ini</h3><span class="chip" id="evDate"></span></div>
           <div id="evList"></div>
@@ -217,6 +235,7 @@
 
     <footer class="footer">
       <div class="orn"><svg width="180" height="22" viewBox="0 0 180 22"><path d="M0 11h66M114 11h66" stroke="currentColor" stroke-opacity=".5"/><path d="M90 1l3 7 7-3-3 7 3 7-7-3-3 7-3-7-7 3 3-7-3-7 7 3z" fill="currentColor"/><circle cx="72" cy="11" r="2" fill="currentColor"/><circle cx="108" cy="11" r="2" fill="currentColor"/></svg></div>
+      <p><button class="link-don" id="footDon"><i data-ic="heart"></i>Dukung pengembangan WAQTY</button></p>
       <p id="footerText"></p>
       <small id="footerMeta"></small>
     </footer>
@@ -252,6 +271,52 @@
     <div class="mcard">
       <div class="mhead"><h3><i data-ic="bell"></i>Pengingat Ibadah</h3><button class="icon-btn" data-close><i data-ic="x"></i></button></div>
       <div class="mbody" id="remBody"></div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: DONASI ===== -->
+  <div class="modal" id="mDonate">
+    <div class="mcard donate">
+      <div class="mhead"><h3><i data-ic="heart"></i><span id="dnTitle">Donasi</span></h3><button class="icon-btn" data-close><i data-ic="x"></i></button></div>
+      <div class="mbody">
+        <div id="dnMain">
+          <div class="dn-hero">
+            <div class="ar">مَنْ دَلَّ عَلَى خَيْرٍ فَلَهُ مِثْلُ أَجْرِ فَاعِلِهِ</div>
+            <p>“Barang siapa menunjukkan kepada kebaikan, maka baginya pahala seperti orang yang mengerjakannya.”</p>
+            <small>HR Muslim</small>
+          </div>
+          <p class="dn-msg" id="dnMsg"></p>
+          <button class="dn-more" id="dnMore">Baca selengkapnya</button>
+          <div class="dn-grid">
+            <div class="dn-qr">
+              <div class="qr-frame"><img id="dnImg" alt="QRIS donasi" decoding="async"><div class="qr-load" id="dnLoad">Memuat QRIS…</div></div>
+              <small id="dnMerchant"></small>
+            </div>
+            <div>
+              <ol class="steps">
+                <li><span><b>Buka</b> aplikasi m-banking atau e-wallet Anda.</span></li>
+                <li><span><b>Pindai</b> QRIS di samping. Jika membuka dari HP, simpan dulu gambarnya, lalu pilih <i>unggah dari galeri</i>.</span></li>
+                <li><span><b>Isi nominal terbaik</b> Anda, lalu selesaikan pembayaran.</span></li>
+              </ol>
+              <div class="wallets">QRIS dapat dibayar dari semua m-banking &amp; e-wallet: BCA, BRI, Mandiri, BNI, BSI, GoPay, OVO, DANA, ShopeePay, LinkAja, dan lainnya.</div>
+              <div class="dn-actions">
+                <a class="btn primary" id="dnSave" download="QRIS-Donasi-WAQTY.png"><i data-ic="download"></i>Simpan QRIS</a>
+                <a class="btn" id="dnWa" target="_blank" rel="noopener"><i data-ic="chat"></i>Konfirmasi via WhatsApp</a>
+              </div>
+              <button class="btn accent dn-done" id="dnDone"><i data-ic="check"></i>Bismillah, saya sudah berdonasi</button>
+              <p class="dn-hint">Tidak bisa menyimpan? Tekan lama gambar QRIS lalu pilih <i>Simpan gambar</i>.</p>
+            </div>
+          </div>
+        </div>
+        <div class="dn-thanks hidden" id="dnThanks">
+          <div class="big"><i data-ic="heart"></i></div>
+          <h4>Jazakumullah khairan katsiran</h4>
+          <div class="ar">آجَرَكَ اللَّهُ فِيمَا أَعْطَيْتَ، وَبَارَكَ لَكَ فِيمَا أَبْقَيْتَ</div>
+          <p class="muted" style="font-size:.84rem;margin:2px 0 12px"><i>“Semoga Allah memberi pahala atas apa yang engkau berikan, dan memberkahi apa yang engkau sisakan.”</i></p>
+          <p id="dnThanksText"></p>
+          <button class="btn primary" data-close><i data-ic="check"></i>Aamiin, tutup</button>
+        </div>
+      </div>
     </div>
   </div>
 

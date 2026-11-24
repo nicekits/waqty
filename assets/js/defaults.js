@@ -1,6 +1,6 @@
 /* Dibuat otomatis dari apps-script/Code.gs oleh tools/build.js — jangan diedit manual */
 window.WAQTY_DEFAULTS = {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "appName": "WAQTY",
   "tagline": "Jadwal Imsakiyah & Kalender Islami",
   "welcome": "Ahlan wa Sahlan",
@@ -73,6 +73,22 @@ window.WAQTY_DEFAULTS = {
     "dhuha": true,
     "tahajud": true,
     "jumat": true
+  },
+  "donation": {
+    "enabled": true,
+    "header": true,
+    "banner": true,
+    "card": true,
+    "label": "Donasi",
+    "title": "Dukung WAQTY, Raih Pahala Kebaikan",
+    "message": "WAQTY hadir agar siapa pun dapat mengetahui waktu shalat, imsak, dan hari-hari mulia dengan mudah — gratis dan tanpa iklan. Donasi Anda membantu pengembangan fitur baru, pemeliharaan, dan menjaga aplikasi ini tetap bisa dinikmati semua orang. Setiap kali seseorang terbantu menjaga shalat dan puasanya lewat WAQTY, insyaAllah ada bagian kebaikan untuk Anda. Berapa pun nominalnya, sangat berarti.",
+    "cardTitle": "Dukung WAQTY",
+    "cardText": "Setiap kali seseorang terbantu menjaga waktu shalatnya lewat WAQTY, ada peran Anda di sana. Mari jaga aplikasi ini tetap gratis & tanpa iklan.",
+    "bannerText": "Bantu WAQTY tetap gratis & tanpa iklan",
+    "merchant": "BeeCOMP Servis",
+    "qrisUrl": "",
+    "whatsapp": "",
+    "thanks": "Semoga Allah membalas kebaikan Anda dengan berlipat ganda, melapangkan rezeki, menyehatkan badan, dan memberkahi keluarga Anda. Terima kasih telah menjadi bagian dari perjalanan WAQTY."
   },
   "customQuotes": [],
   "customEvents": [],

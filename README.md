@@ -26,9 +26,9 @@ assets/js/config.js      ← ★ URL Apps Script (apiUrl)
 assets/js/data.js        ← data kota, hari besar, peristiwa, mutiara
 assets/js/app.js         ← logika aplikasi
 assets/js/defaults.js    ← pengaturan bawaan (hasil build dari Code.gs)
-assets/img/              ← logo & ikon
+assets/img/              ← logo, ikon, qris.png (QRIS donasi)
 apps-script/             ← file untuk Google Apps Script (backend + versi web app GAS)
-  Code.gs, Index.html, Styles.html, Data.html, App.html, appsscript.json
+  Code.gs, Index.html, Styles.html, Data.html, App.html, Qris.html, appsscript.json
 tools/build.js           ← penyusun ulang file hasil build
 tools/index.template.html
 ```
@@ -42,6 +42,7 @@ Backend perlu diperbarui agar bisa melayani GitHub Pages.
 1. Buka proyek Apps Script WAQTY Anda.
 2. Ganti isi file berikut dengan isi file dari folder `apps-script/`:
    `Code.gs`, `Index`, `Styles`, `Data`, `App`.
+   Lalu **buat file HTML baru bernama `Qris`** (klik **＋ → HTML**) dan tempel isi `apps-script/Qris.html`. File ini berisi gambar QRIS donasi untuk versi Apps Script.
 3. Klik **Simpan**.
 4. Klik **Terapkan → Kelola deployment**, lalu klik ikon ✏️ pada deployment yang sudah ada.
    - **Versi**: pilih **Versi baru**
@@ -80,6 +81,7 @@ Selesai. Buka alamat tersebut, ketuk logo 5×, lalu masuk dengan password admin 
 - Password awal: `admin123`. Ganti di **Keamanan & Data**.
 - Lupa password? Di editor Apps Script, jalankan fungsi `resetAdminPassword`.
 - Pengaturan tersimpan di server Apps Script dan berlaku untuk semua pengunjung, baik di versi GitHub maupun di URL Apps Script.
+- **Donasi**: atur teks ajakan, nama penerima, nomor WhatsApp konfirmasi, QRIS lain (URL gambar), serta posisi tombol (header, banner HP, kartu samping). Untuk mengganti QRIS bawaan secara permanen, ganti file `assets/img/qris.png`, lalu jalankan `node tools/build.js`.
 - **Tampilan → Mode performa**:
   - *Otomatis*: menjadi ringan di HP dengan RAM/CPU kecil.
   - *Penuh*: semua animasi aktif.
