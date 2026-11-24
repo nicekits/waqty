@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#04777F">
+  <title>WAQTY — Jadwal Imsakiyah &amp; Kalender Islami</title>
+  <meta name="description" content="WAQTY — jadwal imsakiyah, waktu shalat, kalender Hijriah, hari besar Islam, arah kiblat, dan pengingat ibadah.">
+  <meta property="og:title" content="WAQTY — Jadwal Imsakiyah & Kalender Islami">
+  <meta property="og:description" content="Jadwal shalat & imsakiyah, kalender Hijriah, hari besar Islam, kiblat, dan pengingat ibadah.">
+  <meta property="og:image" content="assets/img/icon-512.png">
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+  <link rel="apple-touch-icon" href="assets/img/icon-180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri&family=El+Messiri:wght@600&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/style.css?v=1.1.0">
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <!-- Logo bawaan (dipakai ulang oleh JS) -->
+  <template id="tplLogo">
+    <svg viewBox="0 0 2312 1594" xmlns="http://www.w3.org/2000/svg" aria-label="WAQTY">
+      <path fill="#04777F" d="M666,893 L1000,302 L1387,968 L1890,97 L2312,0 L1387,1594 L1010,943 A209,209 0 0 0 666,893 Z"/>
+      <path fill="#FE5A1A" d="M0,525 L320,452 L618,968 L628,950 A212,212 0 0 1 982,965 L618,1594 Z"/>
+    </svg>
+  </template>
+
+  <div class="app" id="app">
+    <!-- ===== TOPBAR ===== -->
+    <header class="topbar">
+      <button class="brand" id="brand" aria-label="Logo">
+        <span class="logo" id="logoBox"></span>
+        <span class="brand-text"><b id="appName">WAQTY</b><small id="tagline"></small></span>
+      </button>
+      <div class="actions">
+        <button class="icon-btn" id="btnRemind" title="Pengingat"><i data-ic="bell"></i></button>
+        <button class="icon-btn" id="btnFull" title="Layar penuh"><i data-ic="expand"></i></button>
+        <button class="icon-btn" id="btnRefresh" title="Muat ulang data"><i data-ic="refresh"></i></button>
+        <label class="theme-switch" title="Mode terang / gelap">
+          <input type="checkbox" id="themeToggle" aria-label="Mode gelap">
+          <span class="track">
+            <span class="stars"><i style="left:12px;top:10px"></i><i style="left:22px;top:24px;width:2px;height:2px"></i><i style="left:8px;top:22px;width:2px;height:2px"></i></span>
+            <span class="thumb"><i data-ic="sun" class="sun"></i><i data-ic="moon" class="moon"></i></span>
+          </span>
+        </label>
+      </div>
+    </header>
+
+    <!-- ===== RUNNING TEXT ===== -->
+    <div class="marquee" id="marquee">
+      <span class="marquee-label"><i data-ic="megaphone"></i><span>Info</span></span>
+      <div class="marquee-track"><span id="marqueeText"></span></div>
+    </div>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero sky-siang" id="hero">
+      <div class="stars" id="stars"></div>
+      <div class="orb sun" id="orb"></div>
+      <div class="lanterns" id="lanterns">
+        <div class="lantern"><svg width="34" height="120" viewBox="0 0 34 120"><line x1="17" y1="0" x2="17" y2="44" stroke="rgba(255,236,190,.7)" stroke-width="1.2"/><g transform="translate(0,-16)"><path d="M10 60h14l-2-5h-10z" fill="#E7C27A"/><path d="M8 62h18l4 10-3 26H7L4 72z" fill="rgba(20,30,40,.35)" stroke="#E7C27A" stroke-width="1.5"/><ellipse class="glow" cx="17" cy="80" rx="7" ry="11" fill="#FFD27A" opacity=".9"/><path d="M8 72h18M7 98h20" stroke="#E7C27A" stroke-width="1.2"/><path d="M11 98h12l-6 10z" fill="#E7C27A"/></g></svg></div>
+        <div class="lantern"><svg width="34" height="150" viewBox="0 0 34 150"><line x1="17" y1="0" x2="17" y2="76" stroke="rgba(255,236,190,.7)" stroke-width="1.2"/><g transform="translate(0,16)"><path d="M10 60h14l-2-5h-10z" fill="#E7C27A"/><path d="M8 62h18l4 10-3 26H7L4 72z" fill="rgba(20,30,40,.35)" stroke="#E7C27A" stroke-width="1.5"/><ellipse class="glow" cx="17" cy="80" rx="7" ry="11" fill="#FFD27A" opacity=".9"/><path d="M8 72h18M7 98h20" stroke="#E7C27A" stroke-width="1.2"/><path d="M11 98h12l-6 10z" fill="#E7C27A"/></g></svg></div>
+        <div class="lantern"><svg width="34" height="105" viewBox="0 0 34 105"><line x1="17" y1="0" x2="17" y2="30" stroke="rgba(255,236,190,.7)" stroke-width="1.2"/><g transform="translate(0,-30)"><path d="M10 60h14l-2-5h-10z" fill="#E7C27A"/><path d="M8 62h18l4 10-3 26H7L4 72z" fill="rgba(20,30,40,.35)" stroke="#E7C27A" stroke-width="1.5"/><ellipse class="glow" cx="17" cy="80" rx="7" ry="11" fill="#FFD27A" opacity=".9"/><path d="M8 72h18M7 98h20" stroke="#E7C27A" stroke-width="1.2"/><path d="M11 98h12l-6 10z" fill="#E7C27A"/></g></svg></div>
+      </div>
+
+      <div class="hero-grid">
+        <div class="hero-left">
+          <div class="greet"><span class="ar">السَّلَامُ عَلَيْكُمْ</span><span class="sep"></span><span id="greet">Selamat datang</span></div>
+          <button class="loc-chip" id="btnLoc"><i data-ic="pin"></i><b id="locName">—</b><small id="locSub"></small><i data-ic="chevDown"></i></button>
+          <div class="clock" id="clock"><span id="cHM">--:--</span><span class="sec" id="cS">--</span><span class="tz" id="cTz"></span></div>
+          <div class="dates">
+            <div class="date-m" id="dateM">—</div>
+            <div class="date-h" id="dateH">—</div>
+            <div class="date-ar" id="dateAr"></div>
+          </div>
+        </div>
+        <div class="next-wrap">
+          <svg class="arch" viewBox="0 0 300 330"><path d="M30 330V150C30 70 95 20 150 4c55 16 120 66 120 146v180"/><path d="M46 330V156c0-72 56-118 104-134 48 16 104 62 104 134v174"/></svg>
+          <svg class="rub" viewBox="0 0 100 100"><path d="M20 20h60v60H20z"/><path d="M50 7.6 92.4 50 50 92.4 7.6 50z"/><circle cx="50" cy="50" r="17"/></svg>
+          <svg class="ring" viewBox="0 0 120 120">
+            <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE2A8"/><stop offset="1" stop-color="#FF8A3D"/></linearGradient></defs>
+            <circle class="bgc" cx="60" cy="60" r="52"/>
+            <circle class="fg" id="ringFg" cx="60" cy="60" r="52" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+          </svg>
+          <div class="next-inner">
+            <small>Menuju</small>
+            <div class="nm" id="nextName">—</div>
+            <div class="nm-ar" id="nextAr"></div>
+            <div class="countdown" id="countdown">--:--:--</div>
+            <div class="at" id="nextAt">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skyline">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="xMidYMax slice">
+          <path class="far" d="M0 120V92h80v-8q30-26 60 0v8h60V60h8l4-14 4 14h8v32h110v-10q40-34 80 0v10h420v-10q40-34 80 0v10h110V60h8l4-14 4 14h8v32h60v-8q30-26 60 0v8h80v28z"/>
+          <g class="near">
+            <rect x="0" y="104" width="1200" height="16"/>
+            <path d="M380 105V86q40-32 80 0v19z"/><path d="M740 105V86q40-32 80 0v19z"/>
+            <path d="M510 105V68Q510 24 600 12Q690 24 690 68V105z"/>
+            <path d="M598 13V4h4v9z"/><circle cx="600" cy="3" r="3"/>
+            <path d="M457 105V34h16v71z"/><path d="M453 36h24v-5h-24z"/><path d="M457 31l8-24 8 24z"/>
+            <path d="M727 105V34h16v71z"/><path d="M723 36h24v-5h-24z"/><path d="M727 31l8-24 8 24z"/>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ===== JADWAL HARI INI ===== -->
+    <section class="times" id="times"></section>
+
+    <!-- ===== KONTEN ===== -->
+    <div class="layout">
+      <main>
+        <nav class="tabs" id="tabs">
+          <span class="tab-ink" id="tabInk"></span>
+          <button class="tab active" data-tab="monthly"><i data-ic="table"></i><span>Imsakiyah</span></button>
+          <button class="tab" data-tab="calendar"><i data-ic="calendar"></i><span>Kalender</span></button>
+          <button class="tab" data-tab="holidays"><i data-ic="star8"></i><span>Hari Besar</span></button>
+          <button class="tab" data-tab="qibla"><i data-ic="compass"></i><span>Kiblat</span></button>
+        </nav>
+
+        <section class="card panel active" data-panel="monthly" id="printArea">
+          <div class="print-only" id="printHead"></div>
+          <div class="toolbar">
+            <div class="seg" id="mMode"><button data-mode="masehi" class="on">Masehi</button><button data-mode="hijri">Hijriah</button></div>
+            <div class="month-nav">
+              <button class="icon-btn" id="mPrev" title="Sebelumnya"><i data-ic="chevLeft"></i></button>
+              <div class="month-title"><b id="mTitle">—</b><small id="mSub"></small></div>
+              <button class="icon-btn" id="mNext" title="Berikutnya"><i data-ic="chevRight"></i></button>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn sm" id="mRamadan"><i data-ic="moonStar"></i>Ramadhan</button>
+              <button class="btn sm" id="mToday"><i data-ic="target"></i>Hari ini</button>
+              <button class="btn sm" id="mPrint"><i data-ic="print"></i>Cetak</button>
+            </div>
+          </div>
+          <div class="table-wrap"><table class="tbl" id="mTable"></table></div>
+          <div class="note"><i data-ic="info"></i><span id="methodNote"></span></div>
+        </section>
+
+        <section class="card panel" data-panel="calendar">
+          <div class="toolbar">
+            <div class="month-nav">
+              <button class="icon-btn" id="cPrev"><i data-ic="chevLeft"></i></button>
+              <div class="month-title"><b id="cTitle">—</b><small id="cSub"></small></div>
+              <button class="icon-btn" id="cNext"><i data-ic="chevRight"></i></button>
+            </div>
+            <button class="btn sm" id="cToday"><i data-ic="target"></i>Bulan ini</button>
+          </div>
+          <div class="cal-head" id="calHead"></div>
+          <div class="cal-grid" id="calGrid"></div>
+          <div class="legend">
+            <span><i class="dot-libur"></i>Libur / Hari Raya</span>
+            <span><i class="dot-sunnah"></i>Puasa / amalan sunnah</span>
+            <span><i class="dot-peringatan"></i>Peringatan</span>
+            <span><i class="dot-puasa"></i>Senin–Kamis / Ayyamul Bidh</span>
+          </div>
+        </section>
+
+        <section class="card panel" data-panel="holidays">
+          <div class="card-h"><h3><i data-ic="star8" class="star"></i>Hari Besar Islam Mendatang</h3><span class="chip gold" id="hYear"></span></div>
+          <div class="hlist" id="hList"></div>
+          <div class="note"><i data-ic="info"></i><span>Tanggal Hijriah bersifat perkiraan berdasarkan perhitungan. Penetapan awal Ramadhan, Syawal, dan Dzulhijjah mengikuti hasil rukyatul hilal dan sidang isbat pemerintah.</span></div>
+        </section>
+
+        <section class="card panel" data-panel="qibla">
+          <div class="qibla">
+            <div class="compass">
+              <svg class="dial" id="dial" viewBox="0 0 200 200"></svg>
+              <svg class="needle" id="needle" viewBox="0 0 200 200"></svg>
+            </div>
+            <div>
+              <div class="card-h" style="margin:0"><h3><i data-ic="kaaba" class="star"></i>Arah Kiblat</h3></div>
+              <p class="muted" style="margin:6px 0 0;font-size:.88rem" id="qLoc"></p>
+              <div class="qstat">
+                <div><b id="qDeg">—</b><small>dari arah Utara (searah jarum jam)</small></div>
+                <div><b id="qDist">—</b><small>jarak ke Ka'bah</small></div>
+              </div>
+              <button class="btn primary" id="qSensor"><i data-ic="compass"></i>Aktifkan kompas perangkat</button>
+              <div class="note"><i data-ic="sun"></i><span id="qRashd"></span></div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="side">
+        <article class="card quote-card" id="quoteCard">
+          <div class="card-h"><h3><i data-ic="quote" class="star" style="color:#FFE2A8"></i>Mutiara Hari Ini</h3><span class="chip" id="qType"></span></div>
+          <div class="q-body" id="qBody">
+            <div class="q-ar" id="qAr"></div>
+            <div class="q-id" id="qId"></div>
+            <div class="q-src" id="qSrc"></div>
+          </div>
+          <div class="q-actions">
+            <button class="btn sm" id="qNext"><i data-ic="shuffle"></i>Lainnya</button>
+            <button class="btn sm" id="qCopy"><i data-ic="copy"></i>Salin</button>
+          </div>
+        </article>
+
+        <article class="card" id="eventsCard">
+          <div class="card-h"><h3><i data-ic="history" class="star"></i>Peristiwa Hari Ini</h3><span class="chip" id="evDate"></span></div>
+          <div id="evList"></div>
+        </article>
+
+        <article class="card" id="agendaCard">
+          <div class="card-h"><h3><i data-ic="alarm" class="star"></i>Agenda Ibadah</h3><button class="btn sm ghost" id="agSet"><i data-ic="settings"></i>Atur</button></div>
+          <ul class="agenda" id="agList"></ul>
+        </article>
+      </aside>
+    </div>
+
+    <footer class="footer">
+      <div class="orn"><svg width="180" height="22" viewBox="0 0 180 22"><path d="M0 11h66M114 11h66" stroke="currentColor" stroke-opacity=".5"/><path d="M90 1l3 7 7-3-3 7 3 7-7-3-3 7-3-7-7 3 3-7-3-7 7 3z" fill="currentColor"/><circle cx="72" cy="11" r="2" fill="currentColor"/><circle cx="108" cy="11" r="2" fill="currentColor"/></svg></div>
+      <p id="footerText"></p>
+      <small id="footerMeta"></small>
+    </footer>
+  </div>
+
+  <!-- ===== MODAL: LOKASI ===== -->
+  <div class="modal" id="mLoc">
+    <div class="mcard">
+      <div class="mhead"><h3><i data-ic="pin"></i>Pilih Lokasi</h3><button class="icon-btn" data-close><i data-ic="x"></i></button></div>
+      <div class="mbody">
+        <button class="btn primary" id="useGeo" style="width:100%"><i data-ic="locate"></i>Gunakan lokasi saat ini</button>
+        <div class="sec-title">Cari kota / kabupaten</div>
+        <div class="search-box"><i data-ic="search"></i><input class="input" id="locQ" placeholder="Ketik nama kota, mis. Sidoarjo, Bukittinggi, Tokyo…" autocomplete="off"></div>
+        <div id="locResults" style="margin-top:10px"></div>
+        <div class="sec-title">Kota populer</div>
+        <div class="city-list" id="cityList"></div>
+        <details class="adv">
+          <summary>Atur koordinat secara manual</summary>
+          <div class="field"><label>Nama lokasi</label><input class="input" id="mName"></div>
+          <div class="row"><div class="field"><label>Lintang (lat)</label><input class="input" id="mLat" type="number" step="0.0001"></div>
+            <div class="field"><label>Bujur (lng)</label><input class="input" id="mLng" type="number" step="0.0001"></div></div>
+          <div class="row"><div class="field"><label>Zona waktu (UTC+)</label>
+            <select class="input" id="mTz"></select></div>
+            <div class="field"><label>Ketinggian (meter)</label><input class="input" id="mElev" type="number"></div></div>
+          <button class="btn accent" id="mSave"><i data-ic="check"></i>Simpan lokasi</button>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: PENGINGAT ===== -->
+  <div class="modal" id="mRem">
+    <div class="mcard">
+      <div class="mhead"><h3><i data-ic="bell"></i>Pengingat Ibadah</h3><button class="icon-btn" data-close><i data-ic="x"></i></button></div>
+      <div class="mbody" id="remBody"></div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: DETAIL HARI ===== -->
+  <div class="modal" id="mDay">
+    <div class="mcard">
+      <div class="mhead"><h3><i data-ic="calendar"></i><span id="ddTitle"></span></h3><button class="icon-btn" data-close><i data-ic="x"></i></button></div>
+      <div class="mbody" id="ddBody"></div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: LOGIN ADMIN ===== -->
+  <div class="modal" id="mLogin">
+    <div class="mcard" style="width:min(400px,100%)">
+      <div class="mhead"><h3><i data-ic="lock"></i>Panel Admin</h3><button class="icon-btn" data-close><i data-ic="x"></i></button></div>
+      <div class="mbody">
+        <div class="login-orn"><span class="logo" id="loginLogo"></span></div>
+        <form id="loginForm">
+          <div class="field"><label>Password admin</label><input class="input" type="password" id="loginPw" autocomplete="current-password" required></div>
+          <div class="warn hidden" id="loginErr"></div>
+          <button class="btn primary" style="width:100%" id="loginBtn"><i data-ic="lock"></i>Masuk</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: PANEL ADMIN ===== -->
+  <div class="modal" id="mAdmin">
+    <div class="mcard wide">
+      <div class="mhead"><h3><i data-ic="settings"></i>Pengaturan Aplikasi</h3>
+        <div style="display:flex;gap:8px"><button class="btn sm" id="aLogout"><i data-ic="logout"></i>Keluar</button><button class="icon-btn" data-close><i data-ic="x"></i></button></div></div>
+      <div class="admin">
+        <nav class="anav" id="aNav"></nav>
+        <div class="amain" id="aMain"></div>
+        <div class="abar"><span class="st" id="aStatus">Perubahan belum disimpan akan hilang saat panel ditutup.</span>
+          <button class="btn primary" id="aSave"><i data-ic="save"></i>Simpan Pengaturan</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODE LAYAR PENUH (DISPLAY) ===== -->
+  <div class="kiosk" id="kiosk">
+    <div class="k-top">
+      <div class="k-brand"><span class="logo" id="kLogo"></span><div><b id="kName">WAQTY</b><small id="kLoc"></small></div></div>
+      <button class="btn k-exit" id="kExit"><i data-ic="compress"></i>Keluar</button>
+    </div>
+    <div class="k-mid">
+      <div>
+        <div class="k-clock" id="kClock"><span id="kHM">--:--</span><span class="sec" id="kS"></span></div>
+        <div class="k-date" id="kDate"></div>
+        <div class="k-hijri" id="kHijri"></div>
+      </div>
+      <div class="k-next"><small>Menuju</small><b id="kNext">—</b><div class="cd" id="kCd">--:--:--</div><div id="kAt"></div></div>
+    </div>
+    <div class="k-times" id="kTimes"></div>
+    <div class="k-quote" id="kQuote"></div>
+    <div class="k-run"><span id="kRun"></span></div>
+  </div>
+
+  <div class="toasts" id="toasts"></div>
+
+  <script src="assets/js/config.js?v=1.1.0"></script>
+  <script src="assets/js/defaults.js?v=1.1.0"></script>
+  <script src="assets/js/data.js?v=1.1.0"></script>
+  <script src="assets/js/app.js?v=1.1.0"></script>
+</body>
+</html>
